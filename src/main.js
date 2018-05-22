@@ -41,7 +41,45 @@ class PokemonSearchForm extends React.Component {
     );
   }
 }
+class PokemonList extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      pokemonNameError: null;
+      pokemonSelected: null;
+    }
+  }
 
+  render (this.state.pokemonNameError) {
+    return (
+      
+        
+        <div>
+          <h2 className="error">
+          {this.state.pokemonNameError} does not exist. 
+          please try a different one.
+          </h2>
+        </div> 
+        <div>
+    )
+  }
+  render (this.state.pokemonSelected ) {
+    return (
+      <div>
+        <div>
+          <img src={this.state.pokemonSelected.sprites.front_default}/>
+        </div>
+        <h2>Selected: {this.state.pokemonSelected.name}</h2>
+        <h3>Abilities:</h3>
+        { this.renderAbilitiesList(this.state.pokemonSelected)}
+      </div> :
+      <div>
+        please make a request to see the pokemon!
+      </div>
+  </div>
+    )
+  }
+}
 class App extends React.Component {
   constructor(props) {
     super(props);
@@ -126,31 +164,9 @@ class App extends React.Component {
       <PokemonSearchForm 
         pokemonSelect={this.pokemonSelect}
       />
-      {
-        this.state.pokemonNameError ? 
-        <div>
-          <h2 className="error">
-          {`"${this.state.pokemonNameError}"`} does not exist. 
-          please try a different one.
-          </h2>
-        </div> :
-        <div>
-          {
-            this.state.pokemonSelected ? 
-            <div>
-              <div>
-                <img src={this.state.pokemonSelected.sprites.front_default}/>
-              </div>
-              <h2>Selected: {this.state.pokemonSelected.name}</h2>
-              <h3>Abilities:</h3>
-              { this.renderAbilitiesList(this.state.pokemonSelected)}
-            </div> :
-            <div>
-              please make a request to see the pokemon!
-            </div>
-          }
-        </div>
-      }
+      <PokemonList
+        pokemonList={this.pokemonList}
+        />
       </section>
     );
   }
