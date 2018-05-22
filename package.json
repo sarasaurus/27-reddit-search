@@ -1,18 +1,15 @@
 {
-  "name": "frontend",
+  "name": "frontend-tools",
   "version": "1.0.0",
-  "description": "**Author**: Sarah Bixler   **Version**: 1.0.3",
-  "main": "index.js",
-  "dependencies": {
-    "cowsay-browser": "^1.1.8",
-    "faker": "^4.1.0",
-    "superagent": "^3.8.3"
+  "description": "",
+  "scripts": {
+    "watch": "webpack-dev-server --config webpack.dev.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
   },
   "devDependencies": {
     "babel-core": "^6.26.3",
     "babel-eslint": "^8.2.3",
     "babel-loader": "^7.1.4",
-    "babel-plugin-transform-react-jsx-source": "^6.22.0",
     "babel-preset-env": "^1.7.0",
     "babel-preset-react": "^6.24.1",
     "babel-preset-stage-0": "^6.24.1",
@@ -23,7 +20,6 @@
     "eslint-plugin-import": "^2.12.0",
     "eslint-plugin-jest": "^21.15.1",
     "eslint-plugin-react": "^7.8.2",
-    "file-loader": "^1.1.11",
     "html-webpack-plugin": "^3.2.0",
     "node-sass": "^4.9.0",
     "react": "^16.3.2",
@@ -35,10 +31,8 @@
     "webpack-dev-server": "^3.1.4",
     "webpack-merge": "^4.1.2"
   },
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "watch": "webpack-dev-server --config webpack.dev.js",
-    "build": "webpack --config webpack.dev.js"
+  "dependencies": {
+    "superagent": "^3.8.3"
   },
   "keywords": [],
   "author": "",
