@@ -5,11 +5,6 @@ import { render as reactDomRender } from 'react-dom';// destructuring importing 
 import superagent from 'superagent';
 import '../style/main.scss';
 
-const apiUrl = `http://www.reddit.com/r/${searchFormBoard}.json?limit=${searchFormLimit}`;
-
-const searchFormBoard = '';
-const searchFormLimit = 10;
-
 /* SearchForm Component
 should contain a text input for the user to supply a reddit board to look up
 should contain a number input for the user to limit the number of results to return
@@ -47,13 +42,14 @@ class SearchForm extends React.Component {
   render() {
     if (this.props.classProperty) {
       return (
-        <form>
+        <form onSubmit={this.handleSubmit}>
         <input className="error"
         type="text"
         name="board to lookup"
         placeholder="search for a reddit board"
         value={this.state.boardName}
         onChange={this.handleBoardChange}
+        
         />
         {/* <input
         type="number"
@@ -62,18 +58,19 @@ class SearchForm extends React.Component {
         value={this.state.number}
         onChange={this.handleNumberChange}
         /> */}
-        <button onClick={this.handleSubmit}>Click me</button>
+        {/* <button onClick={this.handleSubmit}>Click me</button> */}
           </form>
       );
     }
     return (
-    <form>
+    <form onSubmit={this.handleSubmit}>
     <input
     type="text"
     name="board to lookup"
     placeholder="search for a reddit board"
     value={this.state.boardName}
     onChange={this.handleBoardChange}
+    
     />
     {/* <input
     type="number"
@@ -82,7 +79,7 @@ class SearchForm extends React.Component {
     value={this.state.number}
     onChange={this.handleNumberChange}
     /> */}
-    <button onClick={this.handleSubmit}>Click me</button>
+    {/* <button onClick={this.handleSubmit}>Click me</button> */}
       </form>
   
   
@@ -169,7 +166,7 @@ class App extends React.Component {
        { this.state.redditResponse ? 
       <SearchResultList
        redditResponse={this.state.redditResponse}/> :
-     <div></div>
+     <div><p>enter a category to see a result </p></div>
       }
       </section>
     );
