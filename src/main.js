@@ -24,24 +24,29 @@ class SearchForm extends React.Component {
     super(props);
     this.state = {
       boardName: '',
+      number: 0,
 
     };
     this.handleBoardChange = this.handleBoardChange.bind(this);
+    // this.handleNumberChange = this.handleNumberChange(this);
     this.handleSubmit = this.handleSubmit.bind(this);
   }
 
   handleBoardChange(event) {
     this.setState({ boardName: event.target.value });
   }
+  // handleNumberChange(event) {
+  //   this.setState({ number: event.target.value });
+  // }
   handleSubmit(event) {
     event.preventDefault();
-    this.props.boardSelect(this.state.boardName);
+    this.props.boardSelect(this.state.boardName, this.state.number);
     // searchFormBoard = this.state.boardName;
   }
   
   render() {
     return (
-    <form onSubmit={this.handleSubmit}>
+    <form>
     <input
     type="text"
     name="board to lookup"
@@ -49,7 +54,17 @@ class SearchForm extends React.Component {
     value={this.state.boardName}
     onChange={this.handleBoardChange}
     />
-    </form>
+    {/* <input
+    type="number"
+    name="number of results"
+    placeholder="1-100"
+    value={this.state.number}
+    onChange={this.handleNumberChange}
+    /> */}
+    <button onClick={this.handleSubmit}>Click me</button>
+      </form>
+  
+  
     );
   }
 }
@@ -129,7 +144,7 @@ class App extends React.Component {
   //   }
   // }
 
-  boardSelect(name) {
+  boardSelect(name, number) {
     this.setState({
       board: name,
     });
