@@ -5,15 +5,6 @@ import { render as reactDomRender } from 'react-dom';// destructuring importing 
 import superagent from 'superagent';
 import '../style/main.scss';
 
-/* SearchForm Component
-should contain a text input for the user to supply a reddit board to look up
-should contain a number input for the user to limit the number of results to return
-the number must be more than 0 and less than 100
-onSubmit the form should make a request to reddit
-it should make a get request to http://reddit.com/r/${searchFormBoard}.json?limit=${searchFormLimit}
-on success it should pass the results to the application state
-on failure it should add a class to the form called error and turn the form's inputs borders red
-*/
 class SearchForm extends React.Component {
   constructor(props) {
     super(props);
@@ -26,7 +17,6 @@ class SearchForm extends React.Component {
     this.handleNumberChange = this.handleNumberChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
   }
-
   handleBoardChange(event) {
     this.setState({ boardName: event.target.value });
   }
@@ -90,7 +80,6 @@ class SearchResultList extends React.Component {
   render() {
     console.log('WHAT THIS?', this.props.redditResponse);
     // here this.props.______ is a variable that is only declared, when SearchResultList is rendered in App
-
     return (
         <ul>
           {this.props.redditResponse.map((item, index) => {
@@ -146,10 +135,10 @@ class App extends React.Component {
         <h1>Reddit!</h1>
         {this.state.redditResponseError ? 
         <SearchForm classProperty="error" boardSelect={this.boardSelect}/> :
-       <SearchForm boardSelect={this.boardSelect}/>
+        <SearchForm boardSelect={this.boardSelect}/>
         }
        { this.state.redditResponse ? 
-      <SearchResultList redditResponse={this.state.redditResponse}/> :
+        <SearchResultList redditResponse={this.state.redditResponse}/> :
      <div><p>enter a category to see a result </p></div>
       }
       </section>
