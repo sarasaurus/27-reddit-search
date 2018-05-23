@@ -85,24 +85,13 @@ class SearchForm extends React.Component {
     );
   }
 }
-// /*
-// SearchResultList Component
-// Should inherit all search results through props
-// This component does not need to have its own state
-// If there are topics in the application state it should display an unordered list
-// Each list item in the unordered list should contain the following
-// an anchor tag with a href to the topic.url
-// inside the anchor a heading tag with the topic.title
-// inside the anchor a p tag with the number of topic.ups */
 
 class SearchResultList extends React.Component {
   render() {
-
     console.log('WHAT THIS?', this.props.redditResponse);
     // here this.props.______ is a variable that is only declared, when SearchResultList is rendered in App
 
-    if (this.props.redditResponse) {
-      return (
+    return (
         <ul>
           {this.props.redditResponse.map((item, index) => {
             return (
@@ -114,9 +103,7 @@ class SearchResultList extends React.Component {
             );
           })}  
         </ul>
-      );
-    } (this.props)
-  
+    );
   }
 }
 // this higher order component will pass its state down to its children as props
@@ -136,7 +123,7 @@ class App extends React.Component {
   boardSelect(name, number) {
     this.setState({
       board: name,
-      number: number,
+      number,
     });
     return superagent.get(`https://www.reddit.com/r/${name}.json?limit=${number}`)
       .then((res) => {
@@ -159,12 +146,10 @@ class App extends React.Component {
         <h1>Reddit!</h1>
         {this.state.redditResponseError ? 
         <SearchForm classProperty="error" boardSelect={this.boardSelect}/> :
-       <SearchForm
-       boardSelect={this.boardSelect}/>
+       <SearchForm boardSelect={this.boardSelect}/>
         }
        { this.state.redditResponse ? 
-      <SearchResultList
-       redditResponse={this.state.redditResponse}/> :
+      <SearchResultList redditResponse={this.state.redditResponse}/> :
      <div><p>enter a category to see a result </p></div>
       }
       </section>
