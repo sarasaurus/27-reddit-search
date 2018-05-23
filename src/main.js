@@ -45,6 +45,27 @@ class SearchForm extends React.Component {
   }
   
   render() {
+    if (this.props.classProperty) {
+      return (
+        <form>
+        <input className="error"
+        type="text"
+        name="board to lookup"
+        placeholder="search for a reddit board"
+        value={this.state.boardName}
+        onChange={this.handleBoardChange}
+        />
+        {/* <input
+        type="number"
+        name="number of results"
+        placeholder="1-100"
+        value={this.state.number}
+        onChange={this.handleNumberChange}
+        /> */}
+        <button onClick={this.handleSubmit}>Click me</button>
+          </form>
+      );
+    }
     return (
     <form>
     <input
@@ -80,22 +101,25 @@ class SearchForm extends React.Component {
 
 class SearchResultList extends React.Component {
   render() {
+
     console.log('WHAT THIS?', this.props.redditResponse);
-    return (
-      <ul>
-        {this.props.redditResponse.map((item, index) => {
-          return (
-            <li key={index}>
-            <a href={`"${item.data.url}"`}><h1>{item.data.title}</h1>
-            <p>{item.data.ups.length}</p>
-            </a>
-            </li>
-          );
-        })}
-        {/* {result} */}
-        
-      </ul>
-    );
+
+    if (this.props.redditResponse) {
+      return (
+        <ul>
+          {this.props.redditResponse.map((item, index) => {
+            return (
+              <li key={index}>
+              <a href={item.data.url}><h1>{item.data.title}</h1>
+              <p>{item.data.ups}</p>
+              </a>
+              </li>
+            );
+          })}  
+        </ul>
+      );
+    } (this.props)
+  
   }
 }
 
@@ -108,41 +132,11 @@ class App extends React.Component {
     this.state = {
       board: '',
       redditResponse: null,
-      redditResponseError: false,
+      redditResponseError: null,
     };
     this.boardSelect = this.boardSelect.bind(this);
     // this.handleSearchResults = this.handleSearchResults.bind(this);
   }
-  // componentDidUpdate() {
-  //   console.log('__UPDATE STATE__', this.state);
-  // }
-  // componentDidMount() {
-  //   if (localStorage.boardLookup) {
-  //     try {
-  //       const boardLookup = JSON.parse(localStorage.boardLookup);
-  //       return this.setState.boardLookup.push(boardLookup);// this is detructuring
-  //       // can also not return this... and just return undefined, no matter
-  //     } catch (err) {
-  //       return console.error(err); // console.error will show up as red in your console
-  //     }
-  //   } else {
-  //     return superagent.get(apiUrl)
-  //       .then((response) => {
-  //         console.log(response);
-  //         const boardLookup = response.body.results.reduce((dict, result) => {
-  //           dict[result.name] = result.url;
-  //           return dict;
-  //         }, {});
-  //         try {
-  //           localStorage.boardLookup = JSON.stringify(boardLookup);
-  //           this.setState({ boardLookup });
-  //         } catch (err) {
-  //           console.error(err);
-  //         }
-  //       })
-  //       .catch(console.error);
-  //   }
-  // }
 
   boardSelect(name, number) {
     this.setState({
@@ -158,30 +152,25 @@ class App extends React.Component {
       .catch((err) => {
         this.setState({
           redditResponse: null,
-          redditResponseError: true,
+          redditResponseError: name,
         });
       });
   }
 
-  // handleSearchResults(result) {
-  //   return (
-  //     <p>
-  //       { result }
-  //     </p>
-  //   );
-  // }
   render() {
     return (
       <section>
         <h1>Reddit!</h1>
+        {this.state.redditResponseError ? 
+        <SearchForm classProperty="error"/> :
        <SearchForm
        boardSelect={this.boardSelect}/>
+        }
        { this.state.redditResponse ? 
-         <SearchResultList
+      <SearchResultList
        redditResponse={this.state.redditResponse}/> :
-       <div><p>nope</p></div>
+     <div>try again</div>
       }
-       
       </section>
     );
   }
