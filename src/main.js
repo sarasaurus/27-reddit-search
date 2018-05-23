@@ -11,7 +11,6 @@ class SearchForm extends React.Component {
     this.state = {
       boardName: '',
       number: 0,
-
     };
     this.handleBoardChange = this.handleBoardChange.bind(this);
     this.handleNumberChange = this.handleNumberChange.bind(this);
