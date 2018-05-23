@@ -23,63 +23,62 @@ class SearchForm extends React.Component {
 
     };
     this.handleBoardChange = this.handleBoardChange.bind(this);
-    // this.handleNumberChange = this.handleNumberChange(this);
+    this.handleNumberChange = this.handleNumberChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
   }
 
   handleBoardChange(event) {
     this.setState({ boardName: event.target.value });
   }
-  // handleNumberChange(event) {
-  //   this.setState({ number: event.target.value });
-  // }
+  handleNumberChange(event) {
+    this.setState({ number: event.target.value });
+  }
   handleSubmit(event) {
     event.preventDefault();
     this.props.boardSelect(this.state.boardName, this.state.number);
-    // searchFormBoard = this.state.boardName;
   }
   
   render() {
     if (this.props.classProperty) {
       return (
-        <form onSubmit={this.handleSubmit}>
+        <form >
         <input className="error"
         type="text"
-        name="board to lookup"
+        name="boardName"
         placeholder="search for a reddit board"
         value={this.state.boardName}
         onChange={this.handleBoardChange}
         
         />
-        {/* <input
+        <input
         type="number"
-        name="number of results"
-        placeholder="1-100"
+        name="number"
+        placeholder="enter a number of results"
         value={this.state.number}
         onChange={this.handleNumberChange}
-        /> */}
-        {/* <button onClick={this.handleSubmit}>Click me</button> */}
+        />
+        <button onClick={this.handleSubmit}>Click me</button>
           </form>
       );
     }
     return (
-    <form onSubmit={this.handleSubmit}>
+    <form >
     <input
     type="text"
-    name="board to lookup"
+    name="boardName"
     placeholder="search for a reddit board"
     value={this.state.boardName}
     onChange={this.handleBoardChange}
     
     />
-    {/* <input
+    <input
     type="number"
-    name="number of results"
-    placeholder="1-100"
+    name="number"
+    placeholder="enter the number of results"
     value={this.state.number}
     onChange={this.handleNumberChange}
-    /> */}
-    {/* <button onClick={this.handleSubmit}>Click me</button> */}
+    />
+    <button onClick={this.handleSubmit}>Click me</button>
       </form>
   
   
@@ -100,6 +99,7 @@ class SearchResultList extends React.Component {
   render() {
 
     console.log('WHAT THIS?', this.props.redditResponse);
+    // here this.props.______ is a variable that is only declared, when SearchResultList is rendered in App
 
     if (this.props.redditResponse) {
       return (
@@ -119,15 +119,13 @@ class SearchResultList extends React.Component {
   
   }
 }
-
-/* should contain all of the application state
-should contain methods for modifying the application state
-the state should have a topics array for holding the results of the search */
+// this higher order component will pass its state down to its children as props
 class App extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
       board: '',
+      number: null,
       redditResponse: null,
       redditResponseError: null,
     };
@@ -138,8 +136,9 @@ class App extends React.Component {
   boardSelect(name, number) {
     this.setState({
       board: name,
+      number: number,
     });
-    return superagent.get(`https://www.reddit.com/r/${name}.json?limit=10`)
+    return superagent.get(`https://www.reddit.com/r/${name}.json?limit=${number}`)
       .then((res) => {
         this.setState({
           redditResponse: res.body.data.children,
