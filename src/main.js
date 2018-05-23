@@ -162,14 +162,14 @@ class App extends React.Component {
       <section>
         <h1>Reddit!</h1>
         {this.state.redditResponseError ? 
-        <SearchForm classProperty="error"/> :
+        <SearchForm classProperty="error" boardSelect={this.boardSelect}/> :
        <SearchForm
        boardSelect={this.boardSelect}/>
         }
        { this.state.redditResponse ? 
       <SearchResultList
        redditResponse={this.state.redditResponse}/> :
-     <div>try again</div>
+     <div></div>
       }
       </section>
     );
