@@ -17,7 +17,7 @@ webpackConfig.output = {
 // to write the html
 webpackConfig.plugins = [
   new HTMLWebpackPlugin({
-    title: 'Pokemon!', // title is not required, its optional 
+    title: 'Reddit!', // title is not required, its optional 
   }),
 ];
 

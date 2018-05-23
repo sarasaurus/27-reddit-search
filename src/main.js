@@ -7,7 +7,7 @@ import '../style/main.scss';
 
 class SearchForm extends React.Component {
   constructor(props) {
-    super(props);
+    super(props);// super allows us to inherit from the parent component
     this.state = {
       boardName: '',
       number: 0,
@@ -78,7 +78,6 @@ class SearchForm extends React.Component {
 
 class SearchResultList extends React.Component {
   render() {
-    console.log('WHAT THIS?', this.props.redditResponse);
     // here this.props.______ is a variable that is only declared, when SearchResultList is rendered in App
     return (
         <ul>
