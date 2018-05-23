@@ -5,152 +5,168 @@ import { render as reactDomRender } from 'react-dom';// destructuring importing 
 import superagent from 'superagent';
 import '../style/main.scss';
 
-const apiUrl = 'https://pokeapi.co/api/v2/pokemon';
+const apiUrl = `http://www.reddit.com/r/${searchFormBoard}.json?limit=${searchFormLimit}`;
 
-class PokemonSearchForm extends React.Component {
+const searchFormBoard = '';
+const searchFormLimit = 10;
+
+/* SearchForm Component
+should contain a text input for the user to supply a reddit board to look up
+should contain a number input for the user to limit the number of results to return
+the number must be more than 0 and less than 100
+onSubmit the form should make a request to reddit
+it should make a get request to http://reddit.com/r/${searchFormBoard}.json?limit=${searchFormLimit}
+on success it should pass the results to the application state
+on failure it should add a class to the form called error and turn the form's inputs borders red
+*/
+class SearchForm extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      pokeName: '',
+      boardName: '',
 
     };
-    this.handlePokemonNameChange = this.handlePokemonNameChange.bind(this);
+    this.handleBoardChange = this.handleBoardChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
   }
 
-  handlePokemonNameChange(event) {
-    this.setState({ pokeName: event.target.value });
+  handleBoardChange(event) {
+    this.setState({ boardName: event.target.value });
   }
   handleSubmit(event) {
     event.preventDefault();
-    this.props.pokemonSelect(this.state.pokeName);
+    this.props.boardSelect(this.state.boardName);
+    // searchFormBoard = this.state.boardName;
   }
-  // react tags JSX usually camel cased, often reporposed vanilla html tags
+  
   render() {
     return (
-      <form onSubmit={this.handleSubmit}>
-      <input
-      type="text"
-      name="pokemonName"
-      placeholder="search for a pokemon"
-      value={this.state.pokeName}
-      onChange={this.handlePokemonNameChange}
-      />
-  
-      </form>
+    <form onSubmit={this.handleSubmit}>
+    <input
+    type="text"
+    name="board to lookup"
+    placeholder="search for a reddit board"
+    value={this.state.boardName}
+    onChange={this.handleBoardChange}
+    />
+    </form>
+    );
+  }
+}
+// /*
+// SearchResultList Component
+// Should inherit all search results through props
+// This component does not need to have its own state
+// If there are topics in the application state it should display an unordered list
+// Each list item in the unordered list should contain the following
+// an anchor tag with a href to the topic.url
+// inside the anchor a heading tag with the topic.title
+// inside the anchor a p tag with the number of topic.ups */
+
+class SearchResultList extends React.Component {
+  render() {
+    console.log('WHAT THIS?', this.props.redditResponse);
+    return (
+      <ul>
+        {this.props.redditResponse.map((item, index) => {
+          return (
+            <li key={index}>
+            <a href={`"${item.data.url}"`}><h1>{item.data.title}</h1>
+            <p>{item.data.ups.length}</p>
+            </a>
+            </li>
+          );
+        })}
+        {/* {result} */}
+        
+      </ul>
     );
   }
 }
 
+/* should contain all of the application state
+should contain methods for modifying the application state
+the state should have a topics array for holding the results of the search */
 class App extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      pokemonLookup: {},
-      pokemonSelected: null,
-      pokemonNameError: null,
+      board: '',
+      redditResponse: null,
+      redditResponseError: false,
     };
-    this.pokemonSelect = this.pokemonSelect.bind(this);
-    this.renderAbilitiesList = this.renderAbilitiesList.bind(this);
+    this.boardSelect = this.boardSelect.bind(this);
+    // this.handleSearchResults = this.handleSearchResults.bind(this);
   }
-  // built-in lifecycle hook from React, invoked immediately after updating occurs
-  componentDidUpdate() {
-    console.log('__UPDATE STATE__', this.state);
-  }
-  // this is the meat and potatoes, logic goes here, built-in life cycle from react, invoked AFTER componenet is rendered to page
-  componentDidMount() {
-    if (localStorage.pokemonLookup) {
-      try {
-        const pokemonLookup = JSON.parse(localStorage.pokemonLookup);
-        return this.setState({ pokemonLookup });// this is detructuring
-        // can also not return this... and just return undefined, no matter
-      } catch (err) {
-        return console.error(err); // console.error will show up as red in your console
-      }
-    } else {
-      return superagent.get(apiUrl)
-        .then((response) => {
-          console.log(response);
-          const pokemonLookup = response.body.results.reduce((dict, result) => {
-            dict[result.name] = result.url;
-            return dict;
-          }, {});
-          try {
-            localStorage.pokemonLookup = JSON.stringify(pokemonLookup);
-            this.setState({ pokemonLookup });
-          } catch (err) {
-            console.error(err);
-          }
-        })
-        .catch(console.error);
-    }
-  }
-  pokemonSelect(name) {
-    if (!this.state.pokemonLookup[name]) {
-      this.setState({
-        pokemonSelected: null,
-        pokemonNameError: name,
+  // componentDidUpdate() {
+  //   console.log('__UPDATE STATE__', this.state);
+  // }
+  // componentDidMount() {
+  //   if (localStorage.boardLookup) {
+  //     try {
+  //       const boardLookup = JSON.parse(localStorage.boardLookup);
+  //       return this.setState.boardLookup.push(boardLookup);// this is detructuring
+  //       // can also not return this... and just return undefined, no matter
+  //     } catch (err) {
+  //       return console.error(err); // console.error will show up as red in your console
+  //     }
+  //   } else {
+  //     return superagent.get(apiUrl)
+  //       .then((response) => {
+  //         console.log(response);
+  //         const boardLookup = response.body.results.reduce((dict, result) => {
+  //           dict[result.name] = result.url;
+  //           return dict;
+  //         }, {});
+  //         try {
+  //           localStorage.boardLookup = JSON.stringify(boardLookup);
+  //           this.setState({ boardLookup });
+  //         } catch (err) {
+  //           console.error(err);
+  //         }
+  //       })
+  //       .catch(console.error);
+  //   }
+  // }
+
+  boardSelect(name) {
+    this.setState({
+      board: name,
+    });
+    return superagent.get(`https://www.reddit.com/r/${name}.json?limit=10`)
+      .then((res) => {
+        this.setState({
+          redditResponse: res.body.data.children,
+          redditResponseError: null,
+        });
+      })
+      .catch((err) => {
+        this.setState({
+          redditResponse: null,
+          redditResponseError: true,
+        });
       });
-    } else {
-      return superagent.get(this.state.pokemonLookup[name])
-        .then((res) => {
-          this.setState({
-            pokemonSelected: res.body,
-            pokemonNameError: null,
-          });
-        })
-        .catch(console.error);
-    }
-    return undefined;
   }
 
-  // li = key, key is critical to react's diffing algorithm that looks for diff when comparing state changes-- on jsx elements that have repetition-- so like one ul, no need key, many li, need key--- some people say this is not best practice--- some people import uuid to keep these unique, and especilly in order 
-  renderAbilitiesList(pokemon) {
-    return (
-      <ul>
-        { pokemon.abilities.map((item, index) => {
-          return (
-            <li key={index}>
-            <p>{item.ability.name}</p>
-            </li>
-          );
-        })}
-      </ul>
-    );
-  }
-
+  // handleSearchResults(result) {
+  //   return (
+  //     <p>
+  //       { result }
+  //     </p>
+  //   );
+  // }
   render() {
     return (
       <section>
-        <h1>Pokemon Form Demo</h1>
-      <PokemonSearchForm 
-        pokemonSelect={this.pokemonSelect}
-      />
-      {
-        this.state.pokemonNameError ? 
-        <div>
-          <h2 className="error">
-          {`"${this.state.pokemonNameError}"`} does not exist. 
-          please try a different one.
-          </h2>
-        </div> :
-        <div>
-          {
-            this.state.pokemonSelected ? 
-            <div>
-              <div>
-                <img src={this.state.pokemonSelected.sprites.front_default}/>
-              </div>
-              <h2>Selected: {this.state.pokemonSelected.name}</h2>
-              <h3>Abilities:</h3>
-              { this.renderAbilitiesList(this.state.pokemonSelected)}
-            </div> :
-            <div>
-              please make a request to see the pokemon!
-            </div>
-          }
-        </div>
+        <h1>Reddit!</h1>
+       <SearchForm
+       boardSelect={this.boardSelect}/>
+       { this.state.redditResponse ? 
+         <SearchResultList
+       redditResponse={this.state.redditResponse}/> :
+       <div><p>nope</p></div>
       }
+       
       </section>
     );
   }
