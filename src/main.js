@@ -5,15 +5,6 @@ import { render as reactDomRender } from 'react-dom';// destructuring importing 
 import superagent from 'superagent';
 import '../style/main.scss';
 
-/* SearchForm Component
-should contain a text input for the user to supply a reddit board to look up
-should contain a number input for the user to limit the number of results to return
-the number must be more than 0 and less than 100
-onSubmit the form should make a request to reddit
-it should make a get request to http://reddit.com/r/${searchFormBoard}.json?limit=${searchFormLimit}
-on success it should pass the results to the application state
-on failure it should add a class to the form called error and turn the form's inputs borders red
-*/
 class SearchForm extends React.Component {
   constructor(props) {
     super(props);
@@ -23,86 +14,73 @@ class SearchForm extends React.Component {
 
     };
     this.handleBoardChange = this.handleBoardChange.bind(this);
-    // this.handleNumberChange = this.handleNumberChange(this);
+    this.handleNumberChange = this.handleNumberChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
   }
-
   handleBoardChange(event) {
     this.setState({ boardName: event.target.value });
   }
-  // handleNumberChange(event) {
-  //   this.setState({ number: event.target.value });
-  // }
+  handleNumberChange(event) {
+    this.setState({ number: event.target.value });
+  }
   handleSubmit(event) {
     event.preventDefault();
     this.props.boardSelect(this.state.boardName, this.state.number);
-    // searchFormBoard = this.state.boardName;
   }
   
   render() {
     if (this.props.classProperty) {
       return (
-        <form onSubmit={this.handleSubmit}>
+        <form >
         <input className="error"
         type="text"
-        name="board to lookup"
+        name="boardName"
         placeholder="search for a reddit board"
         value={this.state.boardName}
         onChange={this.handleBoardChange}
         
         />
-        {/* <input
+        <input
         type="number"
-        name="number of results"
-        placeholder="1-100"
+        name="number"
+        placeholder="enter a number of results"
         value={this.state.number}
         onChange={this.handleNumberChange}
-        /> */}
-        {/* <button onClick={this.handleSubmit}>Click me</button> */}
+        />
+        <button onClick={this.handleSubmit}>Click me</button>
           </form>
       );
     }
     return (
-    <form onSubmit={this.handleSubmit}>
+    <form >
     <input
     type="text"
-    name="board to lookup"
+    name="boardName"
     placeholder="search for a reddit board"
     value={this.state.boardName}
     onChange={this.handleBoardChange}
     
     />
-    {/* <input
+    <input
     type="number"
-    name="number of results"
-    placeholder="1-100"
+    name="number"
+    placeholder="enter the number of results"
     value={this.state.number}
     onChange={this.handleNumberChange}
-    /> */}
-    {/* <button onClick={this.handleSubmit}>Click me</button> */}
+    />
+    <button onClick={this.handleSubmit}>Click me</button>
       </form>
   
   
     );
   }
 }
-// /*
-// SearchResultList Component
-// Should inherit all search results through props
-// This component does not need to have its own state
-// If there are topics in the application state it should display an unordered list
-// Each list item in the unordered list should contain the following
-// an anchor tag with a href to the topic.url
-// inside the anchor a heading tag with the topic.title
-// inside the anchor a p tag with the number of topic.ups */
 
 class SearchResultList extends React.Component {
   render() {
-
     console.log('WHAT THIS?', this.props.redditResponse);
-
-    if (this.props.redditResponse) {
-      return (
+    // here this.props.______ is a variable that is only declared, when SearchResultList is rendered in App
+    return (
         <ul>
           {this.props.redditResponse.map((item, index) => {
             return (
@@ -114,20 +92,16 @@ class SearchResultList extends React.Component {
             );
           })}  
         </ul>
-      );
-    } (this.props)
-  
+    );
   }
 }
-
-/* should contain all of the application state
-should contain methods for modifying the application state
-the state should have a topics array for holding the results of the search */
+// this higher order component will pass its state down to its children as props
 class App extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
       board: '',
+      number: null,
       redditResponse: null,
       redditResponseError: null,
     };
@@ -138,8 +112,9 @@ class App extends React.Component {
   boardSelect(name, number) {
     this.setState({
       board: name,
+      number,
     });
-    return superagent.get(`https://www.reddit.com/r/${name}.json?limit=10`)
+    return superagent.get(`https://www.reddit.com/r/${name}.json?limit=${number}`)
       .then((res) => {
         this.setState({
           redditResponse: res.body.data.children,
@@ -160,12 +135,10 @@ class App extends React.Component {
         <h1>Reddit!</h1>
         {this.state.redditResponseError ? 
         <SearchForm classProperty="error" boardSelect={this.boardSelect}/> :
-       <SearchForm
-       boardSelect={this.boardSelect}/>
+        <SearchForm boardSelect={this.boardSelect}/>
         }
        { this.state.redditResponse ? 
-      <SearchResultList
-       redditResponse={this.state.redditResponse}/> :
+        <SearchResultList redditResponse={this.state.redditResponse}/> :
      <div><p>enter a category to see a result </p></div>
       }
       </section>
